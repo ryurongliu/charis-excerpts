@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 def interpolate(image, xi, yi, cubic=-0.5, missing = np.nan):
     
@@ -124,26 +123,19 @@ def interpolate(image, xi, yi, cubic=-0.5, missing = np.nan):
             else: #point out of bounds
                 c[:, :] = missing
             
-            toc = time.perf_counter()
-            #print('coefficient time for one point', toc-tic)
             
             total=0 #interpolated value
             
-            tic = time.perf_counter()
             
             for l in L:
                 for m in M:
                     coef = c[l+1, m+1]
-                    #print(type(coef))
                     u_y = u(y-(yk+m), cubic) #interpolation kernel
                     #print(x, xj, l)
                     u_x = u(x-(xj+l), cubic)
                     #print(type(u_y))
                     #print(type(u_x))
                     total += coef*u_y*u_x
-            
-            toc = time.perf_counter()
-            #print('sum time for one point', toc-tic)
             
             interped[i] = total
         #endfor
@@ -164,7 +156,8 @@ def u(coord, a): #interpolation kernel
     
     
     
-def bilinear_interpolation(x, y, points): #bilinear interp from somewhere on the internet
+def bilinear_interpolation(x, y, points): #bilinear interp from stackoverflow
+    #https://stackoverflow.com/questions/8661537/how-to-perform-bilinear-interpolation-in-python
     '''Interpolate (x,y) from values associated with four points.
 
     The four points are a list of four triplets:  (x, y, value).
